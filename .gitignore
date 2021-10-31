@@ -1,6 +1,7 @@
 *.secret
 .directory
 .vscode
+secret/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
