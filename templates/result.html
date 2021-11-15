@@ -18,7 +18,7 @@
     <div class="container-fluid p-4 border bg-light">
         <div class="col offset-md-1">
             <div class="row ml-3">
-                <h1>Portfolio History for User</h1>
+                <h1>Portfolio History for {{name}}</h1>
             </div>
         </div>
     </div>
@@ -79,29 +79,20 @@
                     <h3 class="p-2">Current Holdings</h3>
                     <hr>
                 </div>
+                {% for fund in userData %}
+
                 <div class="card shadow">
                     <div class="card-body border-bottom">
-                        <h5 class="card-title">Fund Name</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">NAV: ₹70</h6>
-                        <h6 class="card-subtitle mb-2 text-muted">Invested: ₹12000</h6>
-                        <h5 class="card-subtitle mb-2 text-success">Current: ₹14320</h5>
-                        <p class="card-text text-"> XIRR: 16%</p>
-                    </div>
-                    <div class="card-body border-bottom">
-                        <h5 class="card-title">Fund Name</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">NAV: ₹70</h6>
-                        <h6 class="card-subtitle mb-2 text-muted">Invested: ₹12000</h6>
-                        <h5 class="card-subtitle mb-2 text-success">Current: ₹14320</h5>
-                        <p class="card-text text-"> XIRR: 16%</p>
-                    </div>
-                    <div class="card-body border-bottom">
-                        <h5 class="card-title">Fund Name</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">NAV: ₹70</h6>
-                        <h6 class="card-subtitle mb-2 text-muted">Invested: ₹12000</h6>
-                        <h5 class="card-subtitle mb-2 text-success">Current: ₹14320</h5>
-                        <p class="card-text text-"> XIRR: 16%</p>
+                        <h5 class="card-title">{{fund.scheme}}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">NAV: ₹{{fund.nav}}</h6>
+                        <h6 class="card-subtitle mb-2 text-muted">Units: {{fund.balance}}</h6>
+                        <h6 class="card-subtitle mb-2 text-muted">Invested: ₹{{fund.investment}}</h6>
+                        <h5 class="card-subtitle mb-2 text-success">Current: ₹{{fund.current}}</h5>
+                        <p class="card-text text-"> Absolute Returns: {{fund.return}}%</p>
                     </div>
                 </div>
+
+                {% endfor %}
             </div>
         </div>
     </div>
