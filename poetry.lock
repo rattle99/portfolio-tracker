@@ -550,6 +550,14 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "pyxirr"
+version = "0.6.5"
+description = "Rust-powered collection of financial functions for Python."
+category = "main"
+optional = false
+python-versions = ">=3.6,<3.11"
+
+[[package]]
 name = "pyyaml"
 version = "6.0"
 description = "YAML parser and emitter for Python"
@@ -697,7 +705,7 @@ watchdog = ["watchdog"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.11"
-content-hash = "347d7b5409cb959004ad3e2129d173315bb5487fff16f8b9d2abb943f2146667"
+content-hash = "266d7967f7c39929923562ea2169c07104a8ec7f5cc981b9fa20df6540671326"
 
 [metadata.files]
 appnope = [
@@ -1133,6 +1141,44 @@ pywin32 = [
     {file = "pywin32-302-cp38-cp38-win_amd64.whl", hash = "sha256:543552e66936378bd2d673c5a0a3d9903dba0b0a87235ef0c584f058ceef5872"},
     {file = "pywin32-302-cp39-cp39-win32.whl", hash = "sha256:2393c1a40dc4497fd6161b76801b8acd727c5610167762b7c3e9fd058ef4a6ab"},
     {file = "pywin32-302-cp39-cp39-win_amd64.whl", hash = "sha256:af5aea18167a31efcacc9f98a2ca932c6b6a6d91ebe31f007509e293dea12580"},
+]
+pyxirr = [
+    {file = "pyxirr-0.6.5-cp310-cp310-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:0735b1b295839dcd51b083d09e7072a7735fd87648c5d9a1a49b12a1bb68ffe6"},
+    {file = "pyxirr-0.6.5-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:7049dce42b129255ee6b4729f217b4b65fc3ba3c9264b357cb4e6a514406bb7e"},
+    {file = "pyxirr-0.6.5-cp310-none-win_amd64.whl", hash = "sha256:2885778d116d912a386a3da1a6e34ce613588fc4b45bd5fb08c18bb9cb39f3f5"},
+    {file = "pyxirr-0.6.5-cp36-cp36m-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:94c072fcddc1e30f2762faa491eba54a9965922fca6c1bbaa148c2eb68617a78"},
+    {file = "pyxirr-0.6.5-cp36-cp36m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:3c6d7df58c0bb8e3e54828bd4e5bb1a79e96aeaa2926b8d6b50e722df354f212"},
+    {file = "pyxirr-0.6.5-cp36-cp36m-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:54d2a6c99c2bb626e892f6d85b79df7d7f4acd98a50036b4b183f8fc989e3db4"},
+    {file = "pyxirr-0.6.5-cp36-cp36m-manylinux_2_17_ppc64.manylinux2014_ppc64.whl", hash = "sha256:2074a6a99bf0ae736bb38b6718e8b50f165cbdb25030ce64e9c2adec3660a98b"},
+    {file = "pyxirr-0.6.5-cp36-cp36m-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:009b91cb6e2ad6dbc2f17d2ac85a05810d8fa71653122948a665301e418b60f9"},
+    {file = "pyxirr-0.6.5-cp36-cp36m-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:6860b197fe54d7b94dad1186cbf28ce8c4cd5101aa01349c782a01103c562344"},
+    {file = "pyxirr-0.6.5-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:61a5c35052f72c3a848a6f707e0f2c744d8ca53e46514c8ce2e899115fcb12f7"},
+    {file = "pyxirr-0.6.5-cp36-none-win_amd64.whl", hash = "sha256:597ce2580be98bae9d27c34af10619183dc11bb0252f9a7315caacf0c0162d52"},
+    {file = "pyxirr-0.6.5-cp37-cp37m-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:00534ba63ea69559344a10194fb2250640b41e200f189c91f1f0ee7eec2e6832"},
+    {file = "pyxirr-0.6.5-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:e4e91cc884afe7cb7932a54eb9f6ad98b5295c344cd27c8aaf4afeea6daa1148"},
+    {file = "pyxirr-0.6.5-cp37-cp37m-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:6afd23fb1dc2f92bea70c135dd1ee479aaebe4a6fae0f54806d329a4227ed4a4"},
+    {file = "pyxirr-0.6.5-cp37-cp37m-manylinux_2_17_ppc64.manylinux2014_ppc64.whl", hash = "sha256:823f58c89e95c0204f9609ba9fc68567077490a92483b97387c1c7e1cd46e5c9"},
+    {file = "pyxirr-0.6.5-cp37-cp37m-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:5ff5052fda1704eeba6da88b12e24c0411a4fef5ea5b5818579516e1efe388e7"},
+    {file = "pyxirr-0.6.5-cp37-cp37m-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:8c201e870fa9e3c7388c435cfdb4f516aeae4de119e30ab75e03d4fe7cbf4f81"},
+    {file = "pyxirr-0.6.5-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:2a8f852eb6d010b3e9528e8aac2e16ad69e987efc1b05883fabb16d1fa0b92c0"},
+    {file = "pyxirr-0.6.5-cp37-none-win_amd64.whl", hash = "sha256:67148d2fe1f45e204d86736115afc78b9f959d2613e8ceb6c610da5d2cc2cd32"},
+    {file = "pyxirr-0.6.5-cp38-cp38-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:5c000802926c87c013e4b9ff2cdcfe7b980c7248ae3b0e6a0a79316865c86ba8"},
+    {file = "pyxirr-0.6.5-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:2ecc2644cacd4f13a5173f58a884427a4900362fbd99e6aa6220cf4fcb7fde63"},
+    {file = "pyxirr-0.6.5-cp38-cp38-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:9bac072b223598bb16a03a6efb07f4369f39034c098afb4002f6320bd8bc6d66"},
+    {file = "pyxirr-0.6.5-cp38-cp38-manylinux_2_17_ppc64.manylinux2014_ppc64.whl", hash = "sha256:d8a9fa338b6cb432dac5a624de37ade000904bfa6b184731cfc9a9601e9e1ea3"},
+    {file = "pyxirr-0.6.5-cp38-cp38-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:84cab2bb5d281ad0a3e092ced221bc2684338f4870dd67b2f4baffdf85729385"},
+    {file = "pyxirr-0.6.5-cp38-cp38-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:7402d8a7611ab2cc9e8e5a142035366a89f7c7a1d4c0b63fa9f095c47205dbe0"},
+    {file = "pyxirr-0.6.5-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:8fb43760d715d347a7b1297ddab1fc482ae692b56a02e188145f45c814d6de4f"},
+    {file = "pyxirr-0.6.5-cp38-none-win_amd64.whl", hash = "sha256:824d83d6a65d82450b20c46d965c40ee00440ad8f0b2a2b89a98fe8d00d2e0d5"},
+    {file = "pyxirr-0.6.5-cp39-cp39-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:4e65d32d34c9ecfc23d4688e5d3fb67bba3d0d65358637b340c4b242b30d5882"},
+    {file = "pyxirr-0.6.5-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:f393aa3e3c4c08c58c348a80c6dae27e14c9d80e4d1a621e1616d1fa95412104"},
+    {file = "pyxirr-0.6.5-cp39-cp39-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:6369fc3a9ce3a0c4358478fc9045fc1085cf1447ab17c0ef16c2fdea6cadfb50"},
+    {file = "pyxirr-0.6.5-cp39-cp39-manylinux_2_17_ppc64.manylinux2014_ppc64.whl", hash = "sha256:5a7f9f97e95a7126955244bb0f0d19e640a10b0283f9049850ae2bd089570830"},
+    {file = "pyxirr-0.6.5-cp39-cp39-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:836d84016f268d4c4724ca1d7e4a9df61fa10495b21691e3ffdb16ca3ed2653e"},
+    {file = "pyxirr-0.6.5-cp39-cp39-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:6614a22fca4e3a6493d0c913688b9acb719607a6fb0a5d520f37d68b5a53b409"},
+    {file = "pyxirr-0.6.5-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:11689dc08db60515585fea7b84f6eec9fc6c697724fd120bca42f7526703c567"},
+    {file = "pyxirr-0.6.5-cp39-none-win_amd64.whl", hash = "sha256:c029ad18e0ab22a522cc4f00ef7f679348e9f6d99838699f813a92c6737aa4d0"},
+    {file = "pyxirr-0.6.5.tar.gz", hash = "sha256:380f6ab673168c0c1dee13d76710330df72b2ff7bacf1ce333bdde2a64276dd8"},
 ]
 pyyaml = [
     {file = "PyYAML-6.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:d4db7c7aef085872ef65a8fd7d6d09a14ae91f691dec3e87ee5ee0539d516f53"},

@@ -13,6 +13,8 @@ def util(filename, password):
     f.close()
     df = pd.read_csv('temp.csv', index_col=['date'])
     df = df.sort_index()
+    df = df[['type', 'amount', 'units', 'nav', 'balance', 'scheme', 'amfi']].loc[(
+        df.type == 'PURCHASE') | (df.type == 'REDEMPTION')]
     df['investment'] = df.amount.cumsum()
     chart = getChart(df)
     script_code, chart_code = components(chart)
