@@ -3,6 +3,7 @@ import os
 from flask.helpers import url_for
 from werkzeug.utils import secure_filename
 
+from user.charting import util
 from user.scanner import getData
 
 app = Flask(__name__)
@@ -20,7 +21,6 @@ def upload():
     if request.method == 'GET':
         return render_template('upload.html')
 
-    password = ""
     if request.method == 'POST':
         if request.files:
             pdf = request.files['inputGroupFile']
@@ -38,6 +38,7 @@ def upload():
             else:
                 filename = secure_filename(pdf.filename)
                 pdf.save(os.path.join('./temp/', filename))
+                password = request.form['password']
                 return redirect(url_for('result', filename=os.path.join('./temp/', filename), password=password))
 
 
@@ -46,7 +47,8 @@ def result():
     filename = request.args.get('filename')
     password = request.args.get('password')
     userData, name = getData(filename, password)
-    return render_template('result.html', userData=userData, name=name)
+    bokeh_script_code, chart = util(filename=filename, password=password)
+    return render_template('result.html', userData=userData, name=name, bokeh_script_code=bokeh_script_code, chart=chart)
 
 
 if __name__ == "__main__":
