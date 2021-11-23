@@ -24,7 +24,7 @@ def util(filename, password):
 def getChart(df):
     p = figure(title="Investment", x_axis_label='Date',
                y_axis_label='Value (INR)', x_axis_type='datetime',
-               y_axis_type='linear', plot_width=900, plot_height=500,
+               y_axis_type='linear', plot_width=800, plot_height=450,
                tools='pan,box_zoom,reset', toolbar_location='right')
 
     date = np.array(df.index, dtype=np.datetime64)

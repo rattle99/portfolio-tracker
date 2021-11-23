@@ -16,7 +16,7 @@ def getLatest(URL_ALL='https://www.amfiindia.com/spages/NAVAll.txt'):
     return t
 
 
-def getXirr(df, df_All):
+def getFundXirr(df, df_All):
     amfi_code = str(df.amfi.iloc[0])
     df_fund = df_All.loc[df_All['amfi'] == amfi_code]
     b1 = df.iloc[-1].loc['balance'].copy()
@@ -56,23 +56,60 @@ def getData(filename, password):
     for scheme in schemes:
         df = df2.loc[df2.scheme == scheme]
         df['investment'] = df.amount.cumsum()
+        amfi_code = str(df.amfi.iloc[0])
+        df_fund = df_All.loc[df_All['amfi'] == amfi_code]
+
         inv = round(df['investment'].iloc[-1], 2)
         bal = round(df['balance'].iloc[-1], 2)
-        nav = round(df['nav'].iloc[-1], 2)
+        nav = round(float(df_fund['nav'].iloc[-1]), 2)
         curr = round(bal*nav, 2)
         ret = round(((curr-inv)*(100/inv)), 2)
+
         if bal == 0:
             continue
         if len(df) == 1:
             xirr_amount = 0
         else:
-            xirr_amount = round(getXirr(df=df, df_All=df_All)*100, 2)
-        user = {'scheme': scheme, 'balance': bal,
+            xirr_amount = round(getFundXirr(df=df, df_All=df_All)*100, 2)
+        fund = {'scheme': scheme, 'balance': bal,
                 'investment': inv, 'nav': nav,
                 'current': curr, 'return': ret,
                 'xirr': xirr_amount}
-        userData.append(user)
+        userData.append(fund)
 
     name, statementPeriod = getNameAndPeriod(filename, password)
 
     return userData, name, statementPeriod
+
+
+def finalParser(filename, password):
+    userData, name, statementPeriod = getData(filename, password)
+    investment = 0
+    current = 0
+    for fund in userData:
+        investment += fund['investment']
+        current += fund['current']
+
+    df = pd.read_csv('temp.csv', index_col=['date'])
+    df = df[['type', 'amount', 'units', 'nav', 'balance', 'scheme', 'amfi']].loc[(
+        df.type == 'PURCHASE') | (df.type == 'REDEMPTION')]
+    df = df.sort_index()
+    df_xirr = df.amount.copy()
+    df_xirr = df_xirr.reset_index()
+    today = pd.to_datetime("today")
+    amt = -1*current
+    df_xirr = df_xirr.append(
+        {'date': today, 'amount': amt}, ignore_index=True)
+    xirr_amount = round(xirr(df_xirr)*100, 2)
+    print(xirr_amount)
+    pnl = round(current - investment, 2)
+    if investment == 0:
+        ret = 0
+    else:
+        ret = round(((current-investment)*(100/investment)), 2)
+    current = round(current, 2)
+    investment = round(investment, 2)
+    summary = {'investment': investment, 'current': current,
+               'pnl': pnl, 'return': ret, 'xirr': xirr_amount}
+
+    return userData, name, statementPeriod, summary

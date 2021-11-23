@@ -4,7 +4,7 @@ from flask.helpers import url_for
 from werkzeug.utils import secure_filename
 
 from user.charting import util
-from user.scanner import getData
+from user.scanner import finalParser
 
 app = Flask(__name__)
 app.secret_key = "super secret key"
@@ -46,9 +46,9 @@ def upload():
 def result():
     filename = request.args.get('filename')
     password = request.args.get('password')
-    userData, name, statementPeriod = getData(filename, password)
+    userData, name, statementPeriod, summary = finalParser(filename, password)
     bokeh_script_code, chart = util(filename=filename, password=password)
-    return render_template('result.html', userData=userData, name=name, bokeh_script_code=bokeh_script_code,
+    return render_template('result.html', userData=userData, summary=summary, name=name, bokeh_script_code=bokeh_script_code,
                            chart=chart, statementPeriod=statementPeriod)
 
 
