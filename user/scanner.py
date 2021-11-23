@@ -4,22 +4,37 @@ import json
 from pyxirr import xirr
 
 
-def getXirr(df):
-    df = df.assign(val=df['nav']*df['balance'])
-    b1 = df.iloc[-2].loc['balance']
-    b2 = df.iloc[-1].loc['nav']
-    b3 = b1*b2
-    amt = df['amount'].copy()
-    amt[-1] = -1*b3
-    amt.index = pd.to_datetime(amt.index)
-    return xirr(amt)
+def getLatest(URL_ALL='https://www.amfiindia.com/spages/NAVAll.txt'):
+    dt = pd.read_csv(URL_ALL)
+    dt = dt.rename(columns={
+                   'Scheme Code;ISIN Div Payout/ ISIN Growth;ISIN Div Reinvestment;Scheme Name;Net Asset Value;Date': 1})
+    t = dt[1].str.split(';', expand=True)
+    t.columns = ['amfi', 'ISIN Div Payout/ ISIN Growth',
+                 'ISIN Div Reinvestment', 'Scheme Name', 'nav', 'Date']
+    t = t.dropna(how='any')
+    t['Date'] = pd.to_datetime(t['Date'])
+    return t
 
 
-def getName(filename, password):
+def getXirr(df, df_All):
+    amfi_code = str(df.amfi.iloc[0])
+    df_fund = df_All.loc[df_All['amfi'] == amfi_code]
+    b1 = df.iloc[-1].loc['balance'].copy()
+    b2 = float(df_fund.nav)
+    b3 = -1*(b1*b2)
+    df_xirr = df.amount.copy()
+    df_xirr = df_xirr.reset_index()
+    df_xirr = df_xirr.append({'date': pd.to_datetime(
+        df_fund.Date.iloc[0]), 'amount': b3}, ignore_index=True)
+    return xirr(df_xirr)
+
+
+def getNameAndPeriod(filename, password):
     data = casparser.read_cas_pdf(filename, password, output="json")
     d = json.loads(data)
     name = d['investor_info']['name']
-    return name.title()
+    statementPeriod = d['statement_period']
+    return name.title(), statementPeriod
 
 
 def getData(filename, password):
@@ -35,11 +50,11 @@ def getData(filename, password):
 
     df2 = df[['type', 'amount', 'units', 'nav', 'balance', 'scheme', 'amfi']].loc[(
         df.type == 'PURCHASE') | (df.type == 'REDEMPTION')]
+    df_All = getLatest()
 
     userData = []
     for scheme in schemes:
-        df = df2[['type', 'amount', 'units', 'nav',
-                  'balance', 'scheme']].loc[df2.scheme == scheme]
+        df = df2.loc[df2.scheme == scheme]
         df['investment'] = df.amount.cumsum()
         inv = round(df['investment'].iloc[-1], 2)
         bal = round(df['balance'].iloc[-1], 2)
@@ -51,13 +66,13 @@ def getData(filename, password):
         if len(df) == 1:
             xirr_amount = 0
         else:
-            xirr_amount = round(getXirr(df)*100, 2)
+            xirr_amount = round(getXirr(df=df, df_All=df_All)*100, 2)
         user = {'scheme': scheme, 'balance': bal,
                 'investment': inv, 'nav': nav,
                 'current': curr, 'return': ret,
                 'xirr': xirr_amount}
         userData.append(user)
 
-    name = getName(filename, password)
+    name, statementPeriod = getNameAndPeriod(filename, password)
 
-    return userData, name
+    return userData, name, statementPeriod

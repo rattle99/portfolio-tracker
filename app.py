@@ -46,9 +46,10 @@ def upload():
 def result():
     filename = request.args.get('filename')
     password = request.args.get('password')
-    userData, name = getData(filename, password)
+    userData, name, statementPeriod = getData(filename, password)
     bokeh_script_code, chart = util(filename=filename, password=password)
-    return render_template('result.html', userData=userData, name=name, bokeh_script_code=bokeh_script_code, chart=chart)
+    return render_template('result.html', userData=userData, name=name, bokeh_script_code=bokeh_script_code,
+                           chart=chart, statementPeriod=statementPeriod)
 
 
 if __name__ == "__main__":
