@@ -47,9 +47,10 @@ def result():
     filename = request.args.get('filename')
     password = request.args.get('password')
     userData, name, statementPeriod, summary = finalParser(filename, password)
-    bokeh_script_code, chart = util(filename=filename, password=password)
+    bokeh_script_code, chart_codes = util(
+        filename=filename, password=password, userData=userData)
     return render_template('result.html', userData=userData, summary=summary, name=name, bokeh_script_code=bokeh_script_code,
-                           chart=chart, statementPeriod=statementPeriod)
+                           chart_inv=chart_codes[0], pie_chart=chart_codes[1], statementPeriod=statementPeriod)
 
 
 if __name__ == "__main__":

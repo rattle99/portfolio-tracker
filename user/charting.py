@@ -1,12 +1,16 @@
-from bokeh.plotting import figure
-from bokeh.embed import components
-from bokeh.models import NumeralTickFormatter
 import numpy as np
 import casparser
 import pandas as pd
+from math import pi
+
+from bokeh.plotting import figure
+from bokeh.embed import components
+from bokeh.models import NumeralTickFormatter
+from bokeh.palettes import Category20c, Viridis, YlGn
+from bokeh.transform import cumsum
 
 
-def util(filename, password):
+def util(filename, password, userData):
     data = casparser.read_cas_pdf(filename, password, output="csv")
     f = open("temp.csv", "w")
     f.write(data)
@@ -17,8 +21,9 @@ def util(filename, password):
         df.type == 'PURCHASE') | (df.type == 'REDEMPTION')]
     df['investment'] = df.amount.cumsum()
     chart = getChart(df)
-    script_code, chart_code = components(chart)
-    return script_code, chart_code
+    pie = getPieChart(userData=userData)
+    script_code, chart_codes = components((chart, pie))
+    return script_code, chart_codes
 
 
 def getChart(df):
@@ -35,5 +40,27 @@ def getChart(df):
 
     p.legend.location = "top_left"
     p.legend.click_policy = "mute"
+
+    return p
+
+
+def getPieChart(userData):
+    x = {fund['scheme']: fund['current'] for fund in userData}
+
+    data = pd.Series(x).reset_index(
+        name='current').rename(columns={'index': 'scheme'})
+    data['angle'] = data['current']/data['current'].sum() * 2*pi
+    data['color'] = YlGn[len(x)]
+
+    p = figure(plot_width=800, plot_height=550, title="Fund Distribution", toolbar_location=None,
+               tools="hover", tooltips="@scheme: ₹@current", x_range=(-0.5, 1.0))
+
+    p.wedge(x=0, y=1, radius=0.4,
+            start_angle=cumsum('angle', include_zero=True), end_angle=cumsum('angle'),
+            line_color="white", fill_color='color', legend_field='scheme', source=data)
+
+    p.axis.axis_label = None
+    p.axis.visible = False
+    p.grid.grid_line_color = None
 
     return p
