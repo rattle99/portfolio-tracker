@@ -5,7 +5,7 @@ from math import pi
 
 from bokeh.plotting import figure
 from bokeh.embed import components
-from bokeh.models import NumeralTickFormatter
+from bokeh.models import NumeralTickFormatter, HoverTool
 from bokeh.palettes import Category20c, Viridis, YlGn
 from bokeh.transform import cumsum
 
@@ -38,6 +38,11 @@ def getChart(df):
     p.line(date, df.investment, legend_label='Investment',
            color='#4bcf3a', muted_alpha=0.2, line_width=2)
 
+    hover = HoverTool(mode='vline')
+    hover.tooltips = [('Investment', '₹@y{int}'), ('Date',   '@x{%F}')]
+    hover.formatters = {'@x': 'datetime'}
+    p.add_tools(hover)
+
     p.legend.location = "top_left"
     p.legend.click_policy = "mute"
 
@@ -53,7 +58,7 @@ def getPieChart(userData):
     data['color'] = YlGn[len(x)]
 
     p = figure(plot_width=800, plot_height=550, title="Fund Distribution", toolbar_location=None,
-               tools="hover", tooltips="@scheme: ₹@current", x_range=(-0.5, 1.0))
+               tools="hover", tooltips="@scheme: ₹@current{int}", x_range=(-0.5, 1.0))
 
     p.wedge(x=0, y=1, radius=0.4,
             start_angle=cumsum('angle', include_zero=True), end_angle=cumsum('angle'),
