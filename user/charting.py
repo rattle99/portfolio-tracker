@@ -11,6 +11,18 @@ from bokeh.transform import cumsum
 
 
 def util(filename, password, userData):
+    """Wrapper function to get bokeh charts and corresponding code for embedding in webpage.
+
+    Args:
+        filename (str): File path for CAS file to read from.
+        password (str): Password to open CAS file.
+        userData (list): A list of dictionaries with data for each individual fund for each element in list.
+
+    Returns:
+        obj: Script code for bokeh charts.
+        tuple: Sequence of bokeh charts for embedding in webpage.
+    """
+
     data = casparser.read_cas_pdf(filename, password, output="csv")
     f = open("temp.csv", "w")
     f.write(data)
@@ -27,6 +39,15 @@ def util(filename, password, userData):
 
 
 def getChart(df):
+    """Generate a line chart for investment amount over time.
+
+    Args:
+        df (obj): Pandas dataframe for user transactions.
+
+    Returns:
+        obj: A bokeh figure object.
+    """
+
     p = figure(title="Investment", x_axis_label='Date',
                y_axis_label='Value (INR)', x_axis_type='datetime',
                y_axis_type='linear', plot_width=800, plot_height=450,
@@ -50,6 +71,16 @@ def getChart(df):
 
 
 def getPieChart(userData):
+    """Generate pie chart for fund holdings in portfolio based on current value.
+
+    Args:
+        userData (list): List of dictionaries with fund details for individual fund 
+        for each element of list.
+
+    Returns:
+        obj: A bokeh figure object.
+    """
+
     x = {fund['scheme']: fund['current'] for fund in userData}
 
     data = pd.Series(x).reset_index(

@@ -127,7 +127,7 @@ def getData(filename, password):
 
 def finalParser(filename, password):
     """Fetches and calculate fund data for user in terms of investments, returns generated, XIRR, etc. 
-    Uses helper functions inside.
+    Account summary, user name and statement period. Uses helper functions inside.
 
     Args:
         filename (str): File path for CAS file to read from.
