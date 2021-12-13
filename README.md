@@ -2,7 +2,8 @@
 
 # portfolio-tracker
 
----
+![GitHub](https://img.shields.io/github/license/rattle99/portfolio-tracker?color=green)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/rattle99/portfolio-tracker?color=black)
 
 ## Frontend WireFrame
 
