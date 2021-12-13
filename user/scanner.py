@@ -36,7 +36,7 @@ def getFundXirr(df, df_All):
         float: Calculated XIRR value.
     """
 
-    amfi_code = str(df.amfi.iloc[0])
+    amfi_code = str(int(df.amfi.iloc[0]))
     df_fund = df_All.loc[df_All['amfi'] == amfi_code]
     b1 = df.iloc[-1].loc['balance'].copy()
     b2 = float(df_fund.nav)
@@ -86,32 +86,45 @@ def getData(filename, password):
     f.write(data)
     f.close()
     df = pd.read_csv('temp.csv', index_col=['date'])
-    amcs = df.amc.unique()
-    print(amcs)
-    schemes = df.scheme.unique()
-    print(schemes)
+    print("All schemes in file: ", len(df.scheme.unique()))
+    print(df.scheme.unique())
 
-    df2 = df[['type', 'amount', 'units', 'nav', 'balance', 'scheme', 'amfi']].loc[(
-        df.type == 'PURCHASE') | (df.type == 'REDEMPTION')]
+    COLUMNS_WANTED = ['type', 'amount', 'units',
+                      'nav', 'balance', 'scheme', 'amfi']
+    df2 = df[COLUMNS_WANTED].loc[(
+        df.type == 'PURCHASE') | (df.type == 'REDEMPTION') | (df.type == 'DIVIDEND_REINVEST')]
+    df2 = df2.dropna()
     df_All = getLatest()
+
+    schemes = df2.scheme.unique()
+    print("Schemes tracked: ", len(schemes))
+    print(schemes)
+    print()
 
     userData = []
     for scheme in schemes:
         df = df2.loc[df2.scheme == scheme]
         df['investment'] = df.amount.cumsum()
-        amfi_code = str(df.amfi.iloc[0])
+        amfi_code = str(int(df.amfi.iloc[0]))
         df_fund = df_All.loc[df_All['amfi'] == amfi_code]
 
         inv = round(df['investment'].iloc[-1], 2)
         bal = round(df['balance'].iloc[-1], 2)
-        nav = round(float(df_fund['nav'].iloc[-1]), 2)
+        try:
+            nav = round(float(df_fund['nav'].iloc[-1]), 2)
+        except IndexError:
+            print(df_fund)
+            print()
+            print(df_fund['nav'])
+            print()
+            print(scheme)
+            print()
+
         curr = round(bal*nav, 2)
         ret = round(((curr-inv)*(100/inv)), 2)
 
         if bal == 0:
             continue
-        if len(df) == 1:
-            xirr_amount = 0
         else:
             xirr_amount = round(getFundXirr(df=df, df_All=df_All)*100, 2)
         fund = {'scheme': scheme, 'balance': bal,
