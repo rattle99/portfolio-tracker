@@ -29,8 +29,10 @@ def util(filename, password, userData):
     f.close()
     df = pd.read_csv('temp.csv', index_col=['date'])
     df = df.sort_index()
-    df = df[['type', 'amount', 'units', 'nav', 'balance', 'scheme', 'amfi']].loc[(
-        df.type == 'PURCHASE') | (df.type == 'REDEMPTION')]
+    COLUMNS_WANTED = ['type', 'amount', 'units',
+                      'nav', 'balance', 'scheme', 'amfi']
+    df = df[COLUMNS_WANTED].loc[(
+        df.type == 'PURCHASE') | (df.type == 'REDEMPTION') | (df.type == 'DIVIDEND_REINVEST') | (df.type == 'PURCHASE_SIP')]
     df['investment'] = df.amount.cumsum()
     chart = getChart(df)
     pie = getPieChart(userData=userData)
@@ -82,12 +84,22 @@ def getPieChart(userData):
     """
 
     x = {fund['scheme']: fund['current'] for fund in userData}
+    print(x)
 
     data = pd.Series(x).reset_index(
         name='current').rename(columns={'index': 'scheme'})
     data['angle'] = data['current']/data['current'].sum() * 2*pi
     Colors = viridis(len(x))
-    data['color'] = Category20c[len(x)]
+
+    try:
+        data['color'] = Category20c[len(x)]
+    except KeyError:
+        print("Data: ", data, sep='\n')
+        print()
+        print("Palette: ", Category20c, sep='\n')
+        print("Total colours: ", len(Category20c))
+        print()
+        data['color'] = '#3182bd'
 
     p = figure(plot_width=800, plot_height=850, title="Fund Distribution", toolbar_location=None,
                tools="hover", tooltips="@scheme: ₹@current{int}", x_range=(-0.5, 1.0))

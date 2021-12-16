@@ -92,7 +92,7 @@ def getData(filename, password):
     COLUMNS_WANTED = ['type', 'amount', 'units',
                       'nav', 'balance', 'scheme', 'amfi']
     df2 = df[COLUMNS_WANTED].loc[(
-        df.type == 'PURCHASE') | (df.type == 'REDEMPTION') | (df.type == 'DIVIDEND_REINVEST')]
+        df.type == 'PURCHASE') | (df.type == 'REDEMPTION') | (df.type == 'DIVIDEND_REINVEST') | (df.type == 'PURCHASE_SIP')]
     df2 = df2.dropna()
     df_All = getLatest()
 
@@ -162,8 +162,10 @@ def finalParser(filename, password):
         current += fund['current']
 
     df = pd.read_csv('temp.csv', index_col=['date'])
-    df = df[['type', 'amount', 'units', 'nav', 'balance', 'scheme', 'amfi']].loc[(
-        df.type == 'PURCHASE') | (df.type == 'REDEMPTION')]
+    COLUMNS_WANTED = ['type', 'amount', 'units',
+                      'nav', 'balance', 'scheme', 'amfi']
+    df = df[COLUMNS_WANTED].loc[(
+        df.type == 'PURCHASE') | (df.type == 'REDEMPTION') | (df.type == 'DIVIDEND_REINVEST') | (df.type == 'PURCHASE_SIP')]
     df = df.sort_index()
     df_xirr = df.amount.copy()
     df_xirr = df_xirr.reset_index()
