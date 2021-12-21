@@ -67,13 +67,14 @@ def getNameAndPeriod(filename, password):
     return name.title(), statementPeriod
 
 
-def getData(filename, password):
+def getData(filename, password, df_tx):
     """Fetches and calculate fund data for user in terms of investments, returns generated, XIRR, etc. 
     Uses helper functions inside.
 
     Args:
         filename (str): File path for CAS file to read from.
         password (str): Password to open CAS file.
+        df_tx (obj): Dataframe of user transactions.
 
     Returns:
         list: A list of dictionaries with data for each individual fund for each element in list.
@@ -81,19 +82,7 @@ def getData(filename, password):
         dict: Dictionary with from and to date for account statement period.
     """
 
-    data = casparser.read_cas_pdf(filename, password, output="csv")
-    f = open("temp.csv", "w")
-    f.write(data)
-    f.close()
-    df = pd.read_csv('temp.csv', index_col=['date'])
-    print("All schemes in file: ", len(df.scheme.unique()))
-    print(df.scheme.unique())
-
-    COLUMNS_WANTED = ['type', 'amount', 'units',
-                      'nav', 'balance', 'scheme', 'amfi']
-    df2 = df[COLUMNS_WANTED].loc[(
-        df.type == 'PURCHASE') | (df.type == 'REDEMPTION') | (df.type == 'DIVIDEND_REINVEST') | (df.type == 'PURCHASE_SIP')]
-    df2 = df2.dropna()
+    df2 = df_tx
     df_All = getLatest()
 
     schemes = df2.scheme.unique()
@@ -138,6 +127,22 @@ def getData(filename, password):
     return userData, name, statementPeriod
 
 
+def getTransactions(filename, password):
+    data = casparser.read_cas_pdf(filename, password, output="csv")
+    f = open("temp.csv", "w")
+    f.write(data)
+    f.close()
+    df = pd.read_csv('temp.csv', index_col=['date'])
+    COLUMNS_WANTED = ['type', 'amount', 'units',
+                      'nav', 'balance', 'scheme', 'amfi']
+    df = df[COLUMNS_WANTED].loc[(
+        df.type == 'PURCHASE') | (df.type == 'REDEMPTION') | (df.type == 'DIVIDEND_REINVEST') | (df.type == 'PURCHASE_SIP')]
+    df = df.dropna()
+    df = df.sort_index()
+
+    return df
+
+
 def finalParser(filename, password):
     """Fetches and calculate fund data for user in terms of investments, returns generated, XIRR, etc. 
     Account summary, user name and statement period. Uses helper functions inside.
@@ -154,19 +159,15 @@ def finalParser(filename, password):
         amount, PnL, XIRR, etc.
     """
 
-    userData, name, statementPeriod = getData(filename, password)
+    df = getTransactions(filename=filename, password=password)
+
+    userData, name, statementPeriod = getData(filename, password, df_tx=df)
     investment = 0
     current = 0
     for fund in userData:
         investment += fund['investment']
         current += fund['current']
 
-    df = pd.read_csv('temp.csv', index_col=['date'])
-    COLUMNS_WANTED = ['type', 'amount', 'units',
-                      'nav', 'balance', 'scheme', 'amfi']
-    df = df[COLUMNS_WANTED].loc[(
-        df.type == 'PURCHASE') | (df.type == 'REDEMPTION') | (df.type == 'DIVIDEND_REINVEST') | (df.type == 'PURCHASE_SIP')]
-    df = df.sort_index()
     df_xirr = df.amount.copy()
     df_xirr = df_xirr.reset_index()
     today = pd.to_datetime("today")
