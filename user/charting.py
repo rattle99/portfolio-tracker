@@ -1,5 +1,4 @@
 import numpy as np
-import casparser
 import pandas as pd
 from math import pi
 
@@ -8,6 +7,8 @@ from bokeh.embed import components
 from bokeh.models import NumeralTickFormatter, HoverTool, Legend
 from bokeh.palettes import Category20c, Viridis, YlGn, viridis
 from bokeh.transform import cumsum
+
+from user.scanner import getTransactions
 
 
 def util(filename, password, userData):
@@ -23,16 +24,7 @@ def util(filename, password, userData):
         tuple: Sequence of bokeh charts for embedding in webpage.
     """
 
-    data = casparser.read_cas_pdf(filename, password, output="csv")
-    f = open("temp.csv", "w")
-    f.write(data)
-    f.close()
-    df = pd.read_csv('temp.csv', index_col=['date'])
-    df = df.sort_index()
-    COLUMNS_WANTED = ['type', 'amount', 'units',
-                      'nav', 'balance', 'scheme', 'amfi']
-    df = df[COLUMNS_WANTED].loc[(
-        df.type == 'PURCHASE') | (df.type == 'REDEMPTION') | (df.type == 'DIVIDEND_REINVEST') | (df.type == 'PURCHASE_SIP')]
+    df = getTransactions(filename=filename, password=password)
     df['investment'] = df.amount.cumsum()
     chart = getChart(df)
     pie = getPieChart(userData=userData)
@@ -84,7 +76,6 @@ def getPieChart(userData):
     """
 
     x = {fund['scheme']: fund['current'] for fund in userData}
-    print(x)
 
     data = pd.Series(x).reset_index(
         name='current').rename(columns={'index': 'scheme'})
@@ -94,6 +85,7 @@ def getPieChart(userData):
     try:
         data['color'] = Category20c[len(x)]
     except KeyError:
+        print("There was a KeyError raised with this data, falling back to 1 color.")
         print("Data: ", data, sep='\n')
         print()
         print("Palette: ", Category20c, sep='\n')

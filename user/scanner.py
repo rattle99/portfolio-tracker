@@ -11,7 +11,7 @@ def getLatest(URL_ALL='https://www.amfiindia.com/spages/NAVAll.txt'):
         URL_ALL (str, optional): URL to fetch data from. Defaults to 'https://www.amfiindia.com/spages/NAVAll.txt'.
 
     Returns:
-        obj: A pandas dataframe.
+        obj: A pandas dataframe with all funds and their latest NAVs.
     """
 
     dt = pd.read_csv(URL_ALL)
@@ -86,13 +86,14 @@ def getData(filename, password, df_tx):
     df_All = getLatest()
 
     schemes = df2.scheme.unique()
+    print()
     print("Schemes tracked: ", len(schemes))
-    print(schemes)
+    [print(scheme) for scheme in schemes]
     print()
 
     userData = []
     for scheme in schemes:
-        df = df2.loc[df2.scheme == scheme]
+        df = df2.loc[df2.scheme == scheme].copy()
         df['investment'] = df.amount.cumsum()
         amfi_code = str(int(df.amfi.iloc[0]))
         df_fund = df_All.loc[df_All['amfi'] == amfi_code]
@@ -102,6 +103,7 @@ def getData(filename, password, df_tx):
         try:
             nav = round(float(df_fund['nav'].iloc[-1]), 2)
         except IndexError:
+            print("There was an IndexError raised with this data.")
             print(df_fund)
             print()
             print(df_fund['nav'])
@@ -128,6 +130,16 @@ def getData(filename, password, df_tx):
 
 
 def getTransactions(filename, password):
+    """Get dataframe with all user transactions in different mutual fund schemes.
+
+    Args:
+        filename (str): File path for CAS file to read from.
+        password (str): Password to open CAS file.
+
+    Returns:
+        obj: A pandas dataframe of all user transactions.
+    """
+
     data = casparser.read_cas_pdf(filename, password, output="csv")
     f = open("temp.csv", "w")
     f.write(data)
@@ -175,7 +187,6 @@ def finalParser(filename, password):
     df_xirr = df_xirr.append(
         {'date': today, 'amount': amt}, ignore_index=True)
     xirr_amount = round(xirr(df_xirr)*100, 2)
-    print(xirr_amount)
     pnl = round(current - investment, 2)
     if investment == 0:
         ret = 0
