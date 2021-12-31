@@ -16,6 +16,7 @@ requests = "^2.26.0"
 Flask = "^2.0.2"
 pyxirr = "^0.6.5"
 SQLAlchemy = "^1.4.27"
+tqdm = "^4.62.3"
 
 [tool.poetry.dev-dependencies]
 ipykernel = "^6.4.2"
