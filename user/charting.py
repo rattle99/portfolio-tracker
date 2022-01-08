@@ -88,7 +88,7 @@ def getPieChart(userData):
         print("There was a KeyError raised with this data, falling back to 1 color.")
         print("Data: ", data, sep='\n')
         print()
-        print("Palette: ", Category20c, sep='\n')
+        #print("Palette: ", Category20c, sep='\n')
         print("Total colours: ", len(Category20c))
         print()
         data['color'] = '#3182bd'
